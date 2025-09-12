@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # MySQL Database untuk UserService
+  # MySQL Database untuk User Service
   mysql-users:
     image: mysql:8.0
     container_name: mysql-users-db
