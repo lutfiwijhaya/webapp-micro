@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # MySQL Database untuk User Service
+  mysql-users:
+    image: mysql:8.0
+    container_name: mysql-users-db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: db_users
+    ports:
+      - "3306:3306" # Port default MySQL
+
+  # MySQL Database untuk Reimbursement Service
+  mysql-reimbursement:
+    image: mysql:8.0
+    container_name: mysql-reimbursement-db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: db_reimbursement
+    ports:
+      - "3307:3306" # Port 3307 untuk menghindari konflik
+
+  # MySQL Database untuk Logging Service
+  mysql-logging:
+    image: mysql:8.0
+    container_name: mysql-logging-db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: db_logging
+    ports:
+      - "3308:3306" # Port 3308 untuk menghindari konflik
+
+  # Layanan Pengguna
+  user-service:
+    build:
+      context: ../user-service
+      dockerfile: Dockerfile
+    container_name: user-service-container
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-users:3306/db_users
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      - mysql-users
+
+  # Layanan Reimbursement
+  reimbursement-service:
+    build:
+      context: ../reimbursement-service
+      dockerfile: Dockerfile
+    container_name: reimbursement-service-container
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-reimbursement:3306/db_reimbursement
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      - mysql-reimbursement
+
+  # Layanan Notifikasi (tidak perlu database)
+  notification-service:
+    build:
+      context: ../notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service-container
+    ports:
+      - "8082:8080"
+
+  # Layanan Logging
+  logging-service:
+    build:
+      context: ../logging-service
+      dockerfile: Dockerfile
+    container_name: logging-service-container
+    ports:
+      - "8083:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-logging:3306/db_logging
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      - mysql-logging
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-container
+    ports:
+      - "8084:80" # Port 8084 untuk phpMyAdmin
+    environment:
+      - PMA_HOSTS=mysql-users,mysql-reimbursement,mysql-logging
+      - PMA_ARBITRARY=1 # Mengizinkan koneksi ke host mana pun
+    depends_on:
+      - mysql-users
+      - mysql-reimbursement
+      - mysql-logging
+
