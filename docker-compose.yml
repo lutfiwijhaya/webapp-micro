@@ -34,7 +34,7 @@ services:
   # Layanan Pengguna
   user-service:
     build:
-      context: ../user-service
+      context: ./user-service
       dockerfile: Dockerfile
     container_name: user-service-container
     ports:
@@ -49,7 +49,7 @@ services:
   # Layanan Reimbursement
   reimbursement-service:
     build:
-      context: ../reimbursement-service
+      context: ./reimbursement-service
       dockerfile: Dockerfile
     container_name: reimbursement-service-container
     ports:
@@ -64,7 +64,7 @@ services:
   # Layanan Notifikasi (tidak perlu database)
   notification-service:
     build:
-      context: ../notification-service
+      context: ./notification-service
       dockerfile: Dockerfile
     container_name: notification-service-container
     ports:
@@ -73,7 +73,7 @@ services:
   # Layanan Logging
   logging-service:
     build:
-      context: ../logging-service
+      context: ./logging-service
       dockerfile: Dockerfile
     container_name: logging-service-container
     ports:
@@ -97,4 +97,32 @@ services:
       - mysql-users
       - mysql-reimbursement
       - mysql-logging
+
+  # Layanan Reimbursement Go
+  reimbursement-service-go:
+    build:
+      context: ./reimbursement-service-go   # pastikan folder project Go
+      dockerfile: Dockerfile
+    container_name: reimbursement-service-go-container
+    ports:
+      - "8085:8085"   # Port host:container
+    environment:
+      - DB_HOST=mysql-reimbursement
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=db_reimbursement
+    depends_on:
+      - mysql-reimbursement
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    ports:
+     - "3000:3000"
+    depends_on:
+     - user-service
+     - reimbursement-service-go
 

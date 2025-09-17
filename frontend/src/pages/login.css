@@ -1,0 +1,66 @@
+/* Container untuk center form */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #4b6cb7, #182848);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card putih di tengah */
+.login-card {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  width: 350px;
+  text-align: center;
+}
+
+/* Judul */
+.login-title {
+  margin-bottom: 25px;
+  color: #333333;
+}
+
+/* Input field */
+.login-input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.login-input:focus {
+  border-color: #4b6cb7;
+  outline: none;
+  box-shadow: 0 0 5px rgba(75,108,183,0.5);
+}
+
+/* Button login */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4b6cb7;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-button:hover {
+  background-color: #182848;
+}
+
+/* Footer */
+.login-footer {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #999999;
+}
